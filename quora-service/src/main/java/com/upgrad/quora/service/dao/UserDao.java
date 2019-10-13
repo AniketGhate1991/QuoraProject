@@ -21,7 +21,7 @@ public class UserDao {
     public UserEntity getUserName(final String Username){
         try
         {
-           return entityManager.createNamedQuery("userByUserName",UserEntity.class).setParameter("username",Username)
+           return entityManager.createNamedQuery("userByUserName",UserEntity.class).setParameter("userName",Username)
                    .getSingleResult();
         }
         catch (NoResultException ex){

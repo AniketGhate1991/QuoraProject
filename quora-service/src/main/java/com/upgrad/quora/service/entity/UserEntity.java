@@ -11,13 +11,12 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
 
 @Entity
-@Table(name = "users", schema = "quora")
+@Table(name = "users")
 @NamedQueries(
         {
-                @NamedQuery(name = "userByUserName", query = "select u from UserEntity u where u.username = :username"),
+                @NamedQuery(name = "userByUserName", query = "select u from UserEntity u where u.username = :userName"),
                 @NamedQuery(name = "userByEmail", query = "select u from UserEntity u where u.email =:email")
         }
 )
@@ -32,15 +31,6 @@ public class UserEntity implements Serializable {
     @Size(max = 64)
     private String uuid;
 
-    @Column(name = "EMAIL")
-    @NotNull
-    @Size(max = 200)
-    private String email;
-
-    //@ToStringExclude
-    @Column(name = "PASSWORD")
-    private String password;
-
     @Column(name = "FIRSTNAME")
     @NotNull
     @Size(max = 200)
@@ -51,14 +41,23 @@ public class UserEntity implements Serializable {
     @Size(max = 200)
     private String lastName;
 
-    @Column(name = "CONTACTNUMBER")
-    @NotNull
-    @Size(max = 50)
-    private String contactNumber;
-
     @Column(name = "USERNAME")
     @NotNull
-    private String userName;
+    private String username;
+
+    @Column(name = "EMAIL")
+    @NotNull
+    @Size(max = 200)
+    private String email;
+
+    //@ToStringExclude
+    @Column(name = "PASSWORD")
+    private String password;
+
+    @Column(name = "SALT")
+    @NotNull
+    @Size(max = 200)
+    private String salt;
 
     @Column(name = "COUNTRY")
     @NotNull
@@ -68,15 +67,29 @@ public class UserEntity implements Serializable {
     @NotNull
     private String aboutMe;
 
+    @Column(name = "DOB")
+    @NotNull
+    private String dob;
+
+
     @Column(name = "ROLE")
     @NotNull
     private String role;
 
-    @Column(name = "SALT")
+    @Column(name = "CONTACTNUMBER")
     @NotNull
-    @Size(max = 200)
-    //@ToStringExclude
-    private String salt;
+    @Size(max = 50)
+    private String contactNumber;
+
+
+
+
+
+
+
+
+
+
 
     public Integer getId() {
         return id;
@@ -135,11 +148,11 @@ public class UserEntity implements Serializable {
     }
 
     public String getUserName() {
-        return userName;
+        return username;
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.username = userName;
     }
 
     public String getCountry() {
@@ -174,6 +187,13 @@ public class UserEntity implements Serializable {
         this.salt = salt;
     }
 
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
 
 
 
