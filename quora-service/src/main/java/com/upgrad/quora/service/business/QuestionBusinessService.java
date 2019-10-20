@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 @Service
 public class QuestionBusinessService {
@@ -30,6 +31,23 @@ public class QuestionBusinessService {
                questionEntity.setUser(userEntity);
                questionEntity.setUuid(userEntity.getUuid());
                return questionDao.createquestion(questionEntity);
+            }
+        }
+
+        throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+    }
+
+    public List<QuestionEntity> getAllQuestion(final String authorizationToken) throws AuthorizationFailedException{
+        UserAuthTokenEntity userAuthTokenEntity = questionDao.getUserAuthToken(authorizationToken);
+
+        if(userAuthTokenEntity != null){
+            ZonedDateTime logout = userAuthTokenEntity.getLogoutAt();
+            if (logout != null) {
+                throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get all questions");
+            }
+            else
+            {
+                return questionDao.getAllQuestion();
             }
         }
 

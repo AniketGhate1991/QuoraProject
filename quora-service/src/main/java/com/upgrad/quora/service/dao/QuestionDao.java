@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Repository
 public class QuestionDao {
@@ -40,4 +41,14 @@ public class QuestionDao {
             return null;
         }
     }
+
+    public List<QuestionEntity> getAllQuestion() {
+
+        try {
+            return entityManager.createNamedQuery("getAllQuestion", QuestionEntity.class).getResultList();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
 }
