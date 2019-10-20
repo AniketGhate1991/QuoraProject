@@ -110,4 +110,25 @@ public class QuestionBusinessService {
 
         throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
     }
+
+    public List<QuestionEntity> getAllQuestionByUser(final Integer userid,final String authorizationToken) throws AuthorizationFailedException,UserNotFoundException{
+        UserAuthTokenEntity userAuthTokenEntity = questionDao.getUserAuthToken(authorizationToken);
+
+        if(userAuthTokenEntity != null){
+            ZonedDateTime logout = userAuthTokenEntity.getLogoutAt();
+            if (logout != null) {
+                throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get all questions posted by a specific user");
+            }
+
+            List<QuestionEntity> getentity = questionDao.getAllQuestionByUser(userid);
+            if(getentity.size() == 0)
+            {
+                throw new UserNotFoundException("USR-001", "User with entered uuid whose question details are to be seen does not exist");
+            }
+
+            return getentity;
+        }
+
+        throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+    }
 }

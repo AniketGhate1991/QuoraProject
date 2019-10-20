@@ -5,6 +5,7 @@ import com.upgrad.quora.service.business.QuestionBusinessService;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
+import com.upgrad.quora.service.exception.UserNotFoundException;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -89,5 +90,23 @@ public class QuestionController {
         QuestionDeleteResponse questionDeleteResponse = new QuestionDeleteResponse().id(questionEntity.getUuid()).status("QUESTION DELETED");
 
         return new ResponseEntity<QuestionDeleteResponse>(questionDeleteResponse, HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "question/all/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Object> getAllQuestionByUser(@PathVariable("userId") final Integer userId,@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, UserNotFoundException
+    {
+        String [] bearerToken = authorization.split("Bearer ");
+
+        final List<QuestionEntity> questionEntity = questionBusinessService.getAllQuestionByUser(userId,bearerToken[0]);
+
+        List<JSONObject> entit = new ArrayList<JSONObject>();
+        for (QuestionEntity n : questionEntity) {
+            JSONObject Entitys = new JSONObject();
+            Entitys.put("uuid", n.getUuid());
+            Entitys.put("content", n.getContent());
+            entit.add(Entitys);
+        }
+
+        return new ResponseEntity<Object>(entit, HttpStatus.OK);
     }
 }
