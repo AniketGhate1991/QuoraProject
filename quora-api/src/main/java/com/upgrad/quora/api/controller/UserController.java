@@ -22,20 +22,20 @@ public class UserController {
     private SignupBusinessService signupBusinessService;
 
     @RequestMapping(method = RequestMethod.POST, path = "/user/signup", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<SignupUserResponse> userSignup(final String firstName,final String lastName,final String userName,final String emailAddress,final String password,final String country, final String aboutMe,final String dob,final String contactNumber) throws SignUpRestrictedException, SignUpRestrictedException {
+    public ResponseEntity<SignupUserResponse> userSignup(final SignupUserRequest signupUserRequest) throws SignUpRestrictedException, SignUpRestrictedException {
 
         final UserEntity userEntity = new UserEntity();
 
         userEntity.setUuid(UUID.randomUUID().toString());
-        userEntity.setFirstName(firstName);
-        userEntity.setLastName(lastName);
-        userEntity.setUserName(userName);
-        userEntity.setEmail(emailAddress);
-        userEntity.setPassword(password);
-        userEntity.setCountry(country);
-        userEntity.setAboutMe(aboutMe);
-        userEntity.setDob(dob);
-        userEntity.setContactNumber(contactNumber);
+        userEntity.setFirstName(signupUserRequest.getFirstName());
+        userEntity.setLastName(signupUserRequest.getLastName());
+        userEntity.setUserName(signupUserRequest.getUserName());
+        userEntity.setEmail(signupUserRequest.getEmailAddress());
+        userEntity.setPassword(signupUserRequest.getPassword());
+        userEntity.setCountry(signupUserRequest.getCountry());
+        userEntity.setAboutMe(signupUserRequest.getAboutMe());
+        userEntity.setDob(signupUserRequest.getDob());
+        userEntity.setContactNumber(signupUserRequest.getContactNumber());
         userEntity.setRole("nonadmin");
 
         final UserEntity createdUserEntity = signupBusinessService.signup(userEntity);

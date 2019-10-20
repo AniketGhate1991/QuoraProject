@@ -24,6 +24,12 @@ public class QuestionDao {
         return questionEntity;
     }
 
+    @Transactional
+    public QuestionEntity editquestion(QuestionEntity questionEntity){
+        entityManager.merge(questionEntity);
+        return questionEntity;
+    }
+
     public UserAuthTokenEntity getUserAuthToken(final String accessToken) {
         try {
             return entityManager.createNamedQuery("userAuthTokenByAccessToken", UserAuthTokenEntity.class).setParameter("accessToken", accessToken).getSingleResult();
@@ -46,6 +52,14 @@ public class QuestionDao {
 
         try {
             return entityManager.createNamedQuery("getAllQuestion", QuestionEntity.class).getResultList();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+    public QuestionEntity getQuestionById(final String UUID) {
+        try {
+            return entityManager.createNamedQuery("questionByUUID", QuestionEntity.class).setParameter("UUID", UUID).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
