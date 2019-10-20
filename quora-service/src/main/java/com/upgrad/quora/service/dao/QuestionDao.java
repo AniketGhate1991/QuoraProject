@@ -29,7 +29,12 @@ public class QuestionDao {
         entityManager.merge(questionEntity);
         return questionEntity;
     }
+    @Transactional
+    public QuestionEntity DeleteQuestion(QuestionEntity questionEntity){
+        entityManager.remove(questionEntity);
 
+        return questionEntity;
+    }
     public UserAuthTokenEntity getUserAuthToken(final String accessToken) {
         try {
             return entityManager.createNamedQuery("userAuthTokenByAccessToken", UserAuthTokenEntity.class).setParameter("accessToken", accessToken).getSingleResult();
