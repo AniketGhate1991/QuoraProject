@@ -16,7 +16,7 @@ public class UserAdminBusinessService {
     @Autowired
     private UserDao userDao;
 
-    public UserEntity DeleteUser(final String userUuid, final String authorizationToken) throws AuthorizationFailedException, UserNotFoundException {
+    public UserEntity DeleteUser(final String userid, final String authorizationToken) throws AuthorizationFailedException, UserNotFoundException {
         UserAuthTokenEntity userAuthTokenEntity = userDao.getUserAuthToken(authorizationToken);
         if(userAuthTokenEntity != null){
             ZonedDateTime logout = userAuthTokenEntity.getLogoutAt();
@@ -24,7 +24,7 @@ public class UserAdminBusinessService {
                 throw new AuthorizationFailedException("ATHR-002", "User is signed out");
             }
 
-            UserEntity userEntity = userDao.getUserByUUID(userAuthTokenEntity.getUuid());
+            UserEntity userEntity = userDao.getUserByID(userid);
             if (userEntity == null){
                 throw new UserNotFoundException("USR-001", "User with entered uuid to be deleted does not exist");
             }

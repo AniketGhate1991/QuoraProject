@@ -20,7 +20,6 @@ import com.upgrad.quora.api.model.QuestionDeleteResponse;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-
 @RestController
 @RequestMapping("/")
 public class QuestionController {
@@ -93,7 +92,7 @@ public class QuestionController {
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "question/all/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Object> getAllQuestionByUser(@PathVariable("userId") final Integer userId,@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, UserNotFoundException
+    public ResponseEntity<Object> getAllQuestionByUser(@PathVariable("userId") final String userId,@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, UserNotFoundException
     {
         String [] bearerToken = authorization.split("Bearer ");
 

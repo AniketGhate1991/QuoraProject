@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.upgrad.quora.api.model.SignupUserRequest;
 import com.upgrad.quora.api.model.SignupUserResponse;
+import com.upgrad.quora.api.model.ErrorResponse;
 import com.upgrad.quora.service.entity.UserEntity;
 import java.util.UUID;
 
@@ -39,8 +40,9 @@ public class UserController {
         userEntity.setRole("nonadmin");
 
         final UserEntity createdUserEntity = signupBusinessService.signup(userEntity);
-        SignupUserResponse userResponse = new SignupUserResponse().id(createdUserEntity.getUuid()).status("USER SUCCESSFULLY REGISTERED");
 
+        SignupUserResponse userResponse = new SignupUserResponse().id(createdUserEntity.getUuid()).status("USER SUCCESSFULLY REGISTERED");
         return new ResponseEntity<SignupUserResponse>(userResponse, HttpStatus.CREATED);
+
     }
 }

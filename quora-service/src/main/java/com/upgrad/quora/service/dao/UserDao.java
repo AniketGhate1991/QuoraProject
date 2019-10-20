@@ -56,6 +56,14 @@ public class UserDao {
         }
     }
 
+    public UserEntity getUserByID(final String ID) {
+        try {
+            return entityManager.createNamedQuery("userByID", UserEntity.class).setParameter("ID", ID).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
     public UserAuthTokenEntity getUserAuthToken(final String accessToken) {
         try {
             return entityManager.createNamedQuery("userAuthTokenByAccessToken", UserAuthTokenEntity.class).setParameter("accessToken", accessToken).getSingleResult();
