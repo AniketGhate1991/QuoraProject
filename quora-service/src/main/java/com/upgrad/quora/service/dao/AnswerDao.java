@@ -22,7 +22,11 @@ public class AnswerDao {
         entityManager.persist(answerEntity);
         return answerEntity;
     }
-
+    @Transactional
+    public AnswerEntity editAnswer(AnswerEntity answerEntity){
+        entityManager.merge(answerEntity);
+        return answerEntity;
+    }
     public UserEntity getUserByUUID(final String UUID) {
         try {
             return entityManager.createNamedQuery("userByUUID", UserEntity.class).setParameter("UUID", UUID).getSingleResult();
@@ -33,6 +37,13 @@ public class AnswerDao {
     public QuestionEntity getQuestionById(final String id) {
         try {
             return entityManager.createNamedQuery("getAllQuestionByID", QuestionEntity.class).setParameter("QUESTIONID", id).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+    public AnswerEntity getAnswerById(final String UUID) {
+        try {
+            return entityManager.createNamedQuery("answerByUUID", AnswerEntity.class).setParameter("UUID", UUID).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }

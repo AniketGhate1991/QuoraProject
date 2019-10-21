@@ -8,7 +8,9 @@ import com.upgrad.quora.service.business.AnswerBusinessService;
 import com.upgrad.quora.service.business.QuestionBusinessService;
 import com.upgrad.quora.service.entity.AnswerEntity;
 import com.upgrad.quora.service.entity.QuestionEntity;
+import com.upgrad.quora.service.exception.AnswerNotFoundException;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
+import com.upgrad.quora.service.exception.InvalidQuestionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,7 +28,7 @@ public class AnswerController {
     private AnswerBusinessService answerBusinessService;
 
     @RequestMapping(method = RequestMethod.POST, path = "/question/{questionId}/answer/create", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<AnswerResponse> CreateAnswer(final AnswerRequest answerRequest, @PathVariable("questionId") final String questionId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException {
+    public ResponseEntity<AnswerResponse> CreateAnswer(final AnswerRequest answerRequest, @PathVariable("questionId") final String questionId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException , InvalidQuestionException {
 
 
         String [] bearerToken = authorization.split("Bearer ");
@@ -38,6 +40,23 @@ public class AnswerController {
         answerEntity.setUuid(UUID.randomUUID().toString());
 
         final AnswerEntity answerEntity1 = answerBusinessService.CreateAnswer( answerEntity,questionId,bearerToken[0]);
+        AnswerResponse answerResponse = new AnswerResponse().id(answerEntity1.getUuid()).status("ANSWER CREATED");
+
+        return new ResponseEntity<AnswerResponse>(answerResponse, HttpStatus.CREATED);
+    }
+    @RequestMapping(method = RequestMethod.PUT, path = "/answer/edit/{answerId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<AnswerResponse> editAnswerContent (final AnswerRequest answerRequest, @PathVariable("answerId") final String answerId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException , AnswerNotFoundException {
+
+
+        String [] bearerToken = authorization.split("Bearer ");
+
+        final AnswerEntity answerEntity = new AnswerEntity();
+
+        answerEntity.setContent(answerRequest.getAnswer());
+        answerEntity.setDate(ZonedDateTime.now());
+        answerEntity.setUuid(UUID.randomUUID().toString());
+
+        final AnswerEntity answerEntity1 = answerBusinessService.editAnswer( answerEntity,answerId,bearerToken[0]);
         AnswerResponse answerResponse = new AnswerResponse().id(answerEntity1.getUuid()).status("ANSWER CREATED");
 
         return new ResponseEntity<AnswerResponse>(answerResponse, HttpStatus.CREATED);
