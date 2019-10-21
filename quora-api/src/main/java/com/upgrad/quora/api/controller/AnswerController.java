@@ -61,4 +61,18 @@ public class AnswerController {
 
         return new ResponseEntity<AnswerResponse>(answerResponse, HttpStatus.CREATED);
     }
+
+    @RequestMapping(method = RequestMethod.DELETE, path = "/answer/delete/{answerId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<AnswerResponse> deleteAnswer  ( @PathVariable("answerId") final String answerId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException , AnswerNotFoundException {
+
+
+        String [] bearerToken = authorization.split("Bearer ");
+
+
+
+        final boolean checkdelete = answerBusinessService.deleteAnswer( answerId,bearerToken[0]);
+        AnswerResponse answerResponse = new AnswerResponse().id(answerId).status("ANSWER DELETED");
+
+        return new ResponseEntity<AnswerResponse>(answerResponse, HttpStatus.CREATED);
+    }
 }

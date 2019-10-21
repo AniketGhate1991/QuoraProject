@@ -74,4 +74,33 @@ public class AnswerBusinessService {
 
         throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
     }
+
+    public boolean deleteAnswer( final String answerid, final String authorizationToken) throws AuthorizationFailedException ,AnswerNotFoundException{
+
+
+        UserAuthTokenEntity userAuthTokenEntity = answerDao.getUserAuthToken(authorizationToken);
+
+        if(userAuthTokenEntity != null){
+            ZonedDateTime logout = userAuthTokenEntity.getLogoutAt();
+            if (logout != null) {
+                throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to delete an answer");
+            }
+            AnswerEntity answerEntity1 = answerDao.getAnswerById(answerid);
+            if(answerEntity1 != null){
+                UserEntity userEntity = answerDao.getUserByUUID(userAuthTokenEntity.getUuid());
+                if(answerEntity1.getUser().getId() == userEntity.getId()){
+                    return answerDao.deleteAnswer(answerEntity1);
+                }else{
+                    throw new AnswerNotFoundException("ANS-001", "Entered answer uuid does not exist");
+
+                }
+            }else{
+                throw new AuthorizationFailedException("ATHR-003", "Only the answer owner or admin can delete the answer");
+
+            }
+
+        }
+
+        throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+    }
 }

@@ -27,6 +27,11 @@ public class AnswerDao {
         entityManager.merge(answerEntity);
         return answerEntity;
     }
+    @Transactional
+    public boolean deleteAnswer(AnswerEntity answerEntity){
+        entityManager.remove(answerEntity);
+        return true;
+    }
     public UserEntity getUserByUUID(final String UUID) {
         try {
             return entityManager.createNamedQuery("userByUUID", UserEntity.class).setParameter("UUID", UUID).getSingleResult();
