@@ -31,7 +31,7 @@ public class UserDao {
     }
     @Transactional
     public UserAuthTokenEntity SignOut(UserAuthTokenEntity userAuthTokenEntity){
-        userAuthTokenEntity.setLoginAt(ZonedDateTime.now());
+        userAuthTokenEntity.setLogoutAt(ZonedDateTime.now());
 
 
         return userAuthTokenEntity;
@@ -41,6 +41,17 @@ public class UserDao {
         {
            return entityManager.createNamedQuery("userByUserName",UserEntity.class).setParameter("userName",Username)
                    .getSingleResult();
+        }
+        catch (NoResultException ex){
+            return null;
+        }
+    }
+
+    public UserEntity getUserPassword(final String password){
+        try
+        {
+            return entityManager.createNamedQuery("userByPassword",UserEntity.class).setParameter("userpassword",password)
+                    .getSingleResult();
         }
         catch (NoResultException ex){
             return null;

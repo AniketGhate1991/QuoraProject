@@ -10,17 +10,18 @@ import com.upgrad.quora.service.exception.AnswerNotFoundException;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 
+@Service
 public class AnswerBusinessService {
     @Autowired
     private AnswerDao answerDao;
 
 
     public AnswerEntity CreateAnswer(final AnswerEntity answerEntity,final String questionId, final String authorizationToken) throws AuthorizationFailedException,InvalidQuestionException {
-
 
         UserAuthTokenEntity userAuthTokenEntity = answerDao.getUserAuthToken(authorizationToken);
 
@@ -61,7 +62,8 @@ public class AnswerBusinessService {
             if(answerEntity1 != null){
                  UserEntity userEntity = answerDao.getUserByUUID(userAuthTokenEntity.getUuid());
                 if(answerEntity1.getUser().getId().equals(userEntity.getId()) ){
-                     return answerDao.editAnswer(answerEntity);
+                    answerEntity1.setContent(answerEntity.getContent());
+                     return answerDao.editAnswer(answerEntity1);
                 }else{
                     throw new AnswerNotFoundException("ANS-001", "Entered answer uuid does not exist");
 
@@ -89,11 +91,11 @@ public class AnswerBusinessService {
             AnswerEntity answerEntity1 = answerDao.getAnswerById(answerid);
             if(answerEntity1 != null){
                 UserEntity userEntity = answerDao.getUserByUUID(userAuthTokenEntity.getUuid());
-                if(answerEntity1.getUser().getId().equals(userEntity.getId())){
+                if (answerEntity1.getUser() == userAuthTokenEntity.getUser() || userEntity.getRole().equals("admin"))
+                {
                     return answerDao.deleteAnswer(answerEntity1);
                 }else{
                     throw new AnswerNotFoundException("ANS-001", "Entered answer uuid does not exist");
-
                 }
             }else{
                 throw new AuthorizationFailedException("ATHR-003", "Only the answer owner or admin can delete the answer");

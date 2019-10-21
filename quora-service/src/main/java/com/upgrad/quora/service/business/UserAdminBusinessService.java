@@ -29,7 +29,7 @@ public class UserAdminBusinessService {
                 throw new AuthorizationFailedException("ATHR-002", "User is signed out");
             }
 
-            UserEntity userEntity = userDao.getUserByID(userid);
+            UserEntity userEntity = userDao.getUserByUUID(userid);
             if (userEntity == null){
                 throw new UserNotFoundException("USR-001", "User with entered uuid to be deleted does not exist");
             }
@@ -50,9 +50,9 @@ public class UserAdminBusinessService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public UserAuthTokenEntity authenticate(final String username, final String password) throws AuthenticationFailedException {
-        UserEntity userEntity = userDao.getUserByEmail(username);
+        UserEntity userEntity = userDao.getUserName(username);
         if (userEntity == null) {
-            throw new AuthenticationFailedException("ATH-001", "User with email not found");
+            throw new AuthenticationFailedException("ATH-001", "This username does not exist");
         }
 
         final String encryptedPassword = CryptographyProvider.encrypt(password, userEntity.getSalt());

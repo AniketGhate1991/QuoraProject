@@ -120,14 +120,15 @@ public class QuestionBusinessService {
                 throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get all questions posted by a specific user");
             }
 
-            int usid = Integer.parseInt(userid);
-            List<QuestionEntity> getentity = questionDao.getAllQuestionByUser(usid);
-            if(getentity.size() == 0)
+
+            UserEntity userEntity = questionDao.getUserByUUID(userid);
+            if(userEntity == null)
             {
                 throw new UserNotFoundException("USR-001", "User with entered uuid whose question details are to be seen does not exist");
             }
 
-            return getentity;
+
+            return questionDao.getAllQuestionByUser(userEntity.getId());
         }
 
         throw new AuthorizationFailedException("ATHR-001", "User has not signed in");

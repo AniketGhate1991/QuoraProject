@@ -16,14 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
 import java.util.*;
 
+@RestController
+@RequestMapping("/")
 public class AnswerController {
     @Autowired
     private AnswerBusinessService answerBusinessService;
@@ -54,8 +53,7 @@ public class AnswerController {
         final AnswerEntity answerEntity = new AnswerEntity();
 
         answerEntity.setContent(answerRequest.getAnswer());
-        answerEntity.setDate(ZonedDateTime.now());
-        answerEntity.setUuid(UUID.randomUUID().toString());
+
 
         final AnswerEntity answerEntity1 = answerBusinessService.editAnswer( answerEntity,answerId,bearerToken[0]);
         AnswerResponse answerResponse = new AnswerResponse().id(answerEntity1.getUuid()).status("ANSWER EDITED");

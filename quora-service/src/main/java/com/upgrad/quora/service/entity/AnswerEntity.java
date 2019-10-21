@@ -9,13 +9,14 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+@Entity
 @Table(name = "answer")
 @NamedQueries(
         {
                 @NamedQuery(name = "getAllAnswer", query = "select u from AnswerEntity u "),
                 @NamedQuery(name = "answerByUUID", query = "select u from AnswerEntity u where u.uuid =:UUID"),
                 @NamedQuery(name = "getAllAnswerByUser", query = "select u from AnswerEntity u where u.user.id =:UserID"),
-                @NamedQuery(name = "getAllAnswerByQuestion", query = "select u from AnswerEntity u where u.question.id =:QUESTIONID")
+                @NamedQuery(name = "getAllAnswerByQuestion", query = "select u from AnswerEntity u where u.question.uuid =:QUESTIONID")
 
         }
 )
