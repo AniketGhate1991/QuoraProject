@@ -57,7 +57,7 @@ public class AnswerController {
         answerEntity.setUuid(UUID.randomUUID().toString());
 
         final AnswerEntity answerEntity1 = answerBusinessService.editAnswer( answerEntity,answerId,bearerToken[0]);
-        AnswerResponse answerResponse = new AnswerResponse().id(answerEntity1.getUuid()).status("ANSWER CREATED");
+        AnswerResponse answerResponse = new AnswerResponse().id(answerEntity1.getUuid()).status("ANSWER EDITED");
 
         return new ResponseEntity<AnswerResponse>(answerResponse, HttpStatus.CREATED);
     }
