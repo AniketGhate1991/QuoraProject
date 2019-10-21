@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
 @Service
 public class UserAdminBusinessService {
@@ -55,9 +56,9 @@ public class UserAdminBusinessService {
             throw new AuthenticationFailedException("ATH-001", "This username does not exist");
         }
 
-        final String encryptedPassword = CryptographyProvider.encrypt(password, userEntity.getSalt());
-        if (encryptedPassword.equals(userEntity.getPassword())) {
-            JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
+        //final String encryptedPassword = CryptographyProvider.encrypt(password, userEntity.getSalt());
+        if (password.equals(userEntity.getPassword())) {
+            JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(password);
             UserAuthTokenEntity userAuthTokenEntity = new UserAuthTokenEntity();
             userAuthTokenEntity.setUser(userEntity);
             final ZonedDateTime now = ZonedDateTime.now();
@@ -67,7 +68,7 @@ public class UserAdminBusinessService {
 
             userAuthTokenEntity.setLoginAt(now);
             userAuthTokenEntity.setExpiresAt(expiresAt);
-
+            userAuthTokenEntity.setUuid(UUID.randomUUID().toString());
             userDao.createAuthToken(userAuthTokenEntity);
 
             userDao.updateUser(userEntity);
