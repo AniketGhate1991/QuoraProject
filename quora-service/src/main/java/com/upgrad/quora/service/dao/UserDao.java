@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.time.ZonedDateTime;
 
 @Repository
 public class UserDao {
@@ -28,7 +29,13 @@ public class UserDao {
 
         return userEntity;
     }
+    @Transactional
+    public UserAuthTokenEntity SignOut(UserAuthTokenEntity userAuthTokenEntity){
+        userAuthTokenEntity.setLoginAt(ZonedDateTime.now());
 
+
+        return userAuthTokenEntity;
+    }
     public UserEntity getUserName(final String Username){
         try
         {
