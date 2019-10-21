@@ -29,4 +29,5 @@ public class AdminController {
 
         return new ResponseEntity<UserDeleteResponse>(userResponse, HttpStatus.OK);
     }
+
 }
