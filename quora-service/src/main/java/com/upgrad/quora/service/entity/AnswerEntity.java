@@ -9,35 +9,32 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-
-@Entity
-@Table(name = "question")
+@Table(name = "answer")
 @NamedQueries(
         {
-                @NamedQuery(name = "getAllQuestion", query = "select u from QuestionEntity u "),
-                @NamedQuery(name = "questionByUUID", query = "select u from QuestionEntity u where u.uuid =:UUID"),
-                @NamedQuery(name = "getAllQuestionByUser", query = "select u from QuestionEntity u where u.user.id =:UserID"),
-                @NamedQuery(name = "getAllQuestionByID", query = "select u from QuestionEntity u where u.id =:QUESTIONID")
-
+                @NamedQuery(name = "getAllAnswer", query = "select u from AnswerEntity u "),
+                @NamedQuery(name = "answerByUUID", query = "select u from AnswerEntity u where u.uuid =:UUID"),
+                @NamedQuery(name = "getAllAnswerByUser", query = "select u from AnswerEntity u where u.user.id =:UserID"),
+                @NamedQuery(name = "getAllAnswerByQuestion", query = "select u from AnswerEntity u where u.question.id =:QUESTIONID")
 
         }
 )
-public class QuestionEntity implements Serializable{
+public class AnswerEntity implements Serializable{
 
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     @Column(name = "UUID")
     @NotNull
     private String uuid;
-
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private UserEntity user;
-
-    @Column(name = "CONTENT")
+    @ManyToOne
+    @JoinColumn(name = "QUESTION_ID")
+    private QuestionEntity question;
+    @Column(name = "ANS")
     @NotNull
     private String content;
 
@@ -68,6 +65,14 @@ public class QuestionEntity implements Serializable{
         this.user = user;
     }
 
+    public QuestionEntity getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(QuestionEntity question) {
+        this.question = question;
+    }
+
     public String getContent() {
         return content;
     }
@@ -83,7 +88,6 @@ public class QuestionEntity implements Serializable{
     public void setDate(ZonedDateTime date) {
         this.date = date;
     }
-
     @Override
     public boolean equals(Object obj) {
         return new EqualsBuilder().append(this, obj).isEquals();
@@ -98,6 +102,5 @@ public class QuestionEntity implements Serializable{
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
-
 
 }
