@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Repository
 public class AnswerDao {
@@ -41,7 +42,7 @@ public class AnswerDao {
     }
     public QuestionEntity getQuestionById(final String id) {
         try {
-            return entityManager.createNamedQuery("getAllQuestionByID", QuestionEntity.class).setParameter("QUESTIONID", id).getSingleResult();
+            return entityManager.createNamedQuery("questionByUUID", QuestionEntity.class).setParameter("UUID", id).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
@@ -53,6 +54,7 @@ public class AnswerDao {
             return null;
         }
     }
+
     public UserAuthTokenEntity getUserAuthToken(final String accessToken) {
         try {
             return entityManager.createNamedQuery("userAuthTokenByAccessToken", UserAuthTokenEntity.class).setParameter("accessToken", accessToken).getSingleResult();
@@ -61,5 +63,14 @@ public class AnswerDao {
             return null;
         }
 
+    }
+
+    public List<AnswerEntity> getAllAnswer(String id) {
+
+        try {
+            return entityManager.createNamedQuery("getAllAnswerByQuestion", AnswerEntity.class).setParameter("QUESTIONID", id).getResultList();
+        } catch (NoResultException nre) {
+            return null;
+        }
     }
 }

@@ -11,6 +11,7 @@ import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.exception.AnswerNotFoundException;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.time.ZonedDateTime;
-import java.util.UUID;
+import java.util.*;
 
 public class AnswerController {
     @Autowired
@@ -74,5 +75,23 @@ public class AnswerController {
         AnswerResponse answerResponse = new AnswerResponse().id(answerId).status("ANSWER DELETED");
 
         return new ResponseEntity<AnswerResponse>(answerResponse, HttpStatus.CREATED);
+    }
+    @RequestMapping(method = RequestMethod.GET, path = "/answer/all/{questionId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Object> getAllAnswersToQuestion   ( @PathVariable("questionId") final String questionId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException , InvalidQuestionException {
+
+
+        String [] bearerToken = authorization.split("Bearer ");
+
+
+        List<AnswerEntity> allQuestionAnswer = answerBusinessService.getAllQuestionAnswer(questionId, bearerToken[0]);
+         List<JSONObject> entities = new ArrayList<JSONObject>();
+        for (AnswerEntity n : allQuestionAnswer) {
+            JSONObject Entity = new JSONObject();
+            Entity.put("uuid", n.getUuid());
+            Entity.put("content", n.getContent());
+            entities.add(Entity);
+        }
+
+        return new ResponseEntity<Object>(entities, HttpStatus.OK);
     }
 }
